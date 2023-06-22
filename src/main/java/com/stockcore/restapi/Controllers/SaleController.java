@@ -1,4 +1,4 @@
-package com.stockcore.restapi.Controller;
+package com.stockcore.restapi.Controllers;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.stockcore.restapi.Model.Sale;
-import com.stockcore.restapi.Repository.SaleRepository;
+
+import com.stockcore.restapi.Models.Sale;
+import com.stockcore.restapi.Repositories.SaleRepository;
 
 @RestController
 public class SaleController {

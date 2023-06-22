@@ -1,7 +1,6 @@
-package com.stockcore.restapi.Model;
+package com.stockcore.restapi.Models;
 
 import java.util.Date;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,54 +8,53 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "sale")
-public class Sale {
+@Table(name = "transaction")
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_product")
+    private Product product;
     
-    private int amount;
-    private float total;
+
+    @ManyToOne
+    @JoinColumn(name = "id_transaction_type")
+    private TransactionType type;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date", nullable = false, updatable = false)
     private Date date;
-
-    @ManyToMany
-    @JoinTable(
-        name = "sale_product",
-        joinColumns = @JoinColumn(name = "id_sale"),
-        inverseJoinColumns = @JoinColumn(name = "id_product")
-    )
-    private List<Product> products;
+    
+    private int amount;
 
     
-    public Long getId() {
+    public long getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
-    public int getAmount() {
-        return amount;
+    public Product getProduct() {
+        return product;
     }
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setProduct(Product product) {
+        this.product = product;
     }
-    public float getTotal() {
-        return total;
+    public TransactionType getType() {
+        return type;
     }
-    public void setTotal(float total) {
-        this.total = total;
+    public void setType(TransactionType type) {
+        this.type = type;
     }
     public Date getDate() {
         return date;
@@ -64,10 +62,17 @@ public class Sale {
     public void setDate(Date date) {
         this.date = date;
     }
+    public int getAmount() {
+        return amount;
+    }
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 
     @PrePersist
     protected void onCreate() {
         this.date = new Date();
     }
+    
 
 }

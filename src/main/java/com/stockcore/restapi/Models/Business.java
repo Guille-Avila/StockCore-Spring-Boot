@@ -1,7 +1,7 @@
-package com.stockcore.restapi.Model;
+package com.stockcore.restapi.Models;
 
 import java.util.List;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,8 +23,11 @@ public class Business {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "business")
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
+
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Category> categories;
 
     public long getId() {
         return id;
@@ -50,6 +53,5 @@ public class Business {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
 }

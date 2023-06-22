@@ -1,6 +1,8 @@
-package com.stockcore.restapi.Controller;
+package com.stockcore.restapi.Controllers;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,12 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.stockcore.restapi.Model.Product;
-import com.stockcore.restapi.Repository.ProductRepository;
+
+import com.stockcore.restapi.Models.Product;
+import com.stockcore.restapi.Repositories.ProductRepository;
+import com.stockcore.restapi.Services.TransactionService;
 
 
 @RestController
 public class ProductController {
+
+    private final TransactionService transactionService;
+
+    public ProductController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @Autowired
     private ProductRepository data;
@@ -30,9 +40,26 @@ public class ProductController {
         return data.findAll();
     }
 
+    @GetMapping("products/{businessId}")
+    public List<Product> getProductsByBusinessId(@PathVariable Long businessId) {
+        return data.findByBusinessId(businessId);
+    }
+
+    @GetMapping(value = "/product/{id}")
+    public Optional<Product> getProduct(@PathVariable Long id) {
+        return data.findById(id);
+    }
+
     @PostMapping("/create-product")
     public String createProduct(@RequestBody Product newProduct) {
+
         data.save(newProduct);
+
+        int amountNewProduct = newProduct.getAmount();
+
+        if (amountNewProduct > 0) {
+            transactionService.transactionNewProduct(amountNewProduct, newProduct);
+        }
         
         return "Product created!";
     }
@@ -45,6 +72,11 @@ public class ProductController {
         }
         
         Product updatedProduct = data.findById(id).orElse(null);
+
+        if (productToEdit.getAmount() != updatedProduct.getAmount()) {
+            transactionService.createTransaction(updatedProduct, productToEdit.getAmount());
+        }
+
         updatedProduct.setBusiness(productToEdit.getBusiness());;
         updatedProduct.setCategory(productToEdit.getCategory());
         updatedProduct.setName(productToEdit.getName());

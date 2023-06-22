@@ -1,6 +1,8 @@
-package com.stockcore.restapi.Controller;
+package com.stockcore.restapi.Controllers;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,8 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.stockcore.restapi.Model.Business;
-import com.stockcore.restapi.Repository.BusinessRepository;
+
+import com.stockcore.restapi.Models.Business;
+import com.stockcore.restapi.Repositories.BusinessRepository;
 
 
 @RestController
@@ -20,9 +23,15 @@ public class BusinessController {
     @Autowired
     private BusinessRepository data;
 
-    @GetMapping(value = "/business")
+    @GetMapping("/business")
     public List<Business> getBusiness() {
         return data.findAll();
+    }
+
+    
+    @GetMapping("/business/{id}")
+    public Optional<Business> getBusinessById(@PathVariable Long id) {
+        return data.findById(id);
     }
 
     @PostMapping("/create-business")
