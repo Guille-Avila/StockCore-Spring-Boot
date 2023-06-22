@@ -1,7 +1,8 @@
-package com.stockcore.restapi.Model;
+package com.stockcore.restapi.Models;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,8 +34,8 @@ public class Product {
     private int amount;
     private int price;
 
-    @OneToMany(mappedBy = "product")
-    private List<Entry> entries;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> transactions;
 
     @ManyToMany(mappedBy = "products")
     private List<Sale> sales;

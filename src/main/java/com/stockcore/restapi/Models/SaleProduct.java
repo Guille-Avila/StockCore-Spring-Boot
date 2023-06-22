@@ -1,4 +1,4 @@
-package com.stockcore.restapi.Model;
+package com.stockcore.restapi.Models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

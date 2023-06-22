@@ -1,6 +1,8 @@
-package com.stockcore.restapi.Controller;
+package com.stockcore.restapi.Controllers;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,8 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.stockcore.restapi.Model.Category;
-import com.stockcore.restapi.Repository.CategoryRepository;
+
+import com.stockcore.restapi.Models.Category;
+import com.stockcore.restapi.Repositories.CategoryRepository;
 
 @RestController
 public class CategoryController {
@@ -22,6 +25,16 @@ public class CategoryController {
     @GetMapping("/categories")
     public List<Category> getCategories() {
         return data.findAll();
+    }
+
+    @GetMapping("/categories/{businessId}")
+    public List<Category> getCategoriesByBusiness(@PathVariable Long businessId) {
+        return data.findByBusinessId(businessId);
+    }
+
+    @GetMapping("/category/{id}")
+    public Optional<Category> getCategory(@PathVariable Long id) {
+        return data.findById(id);
     }
 
     @PostMapping("/create-category")
